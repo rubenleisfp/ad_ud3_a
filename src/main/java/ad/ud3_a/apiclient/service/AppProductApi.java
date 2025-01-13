@@ -3,6 +3,7 @@ package ad.ud3_a.apiclient.service;
 import java.io.IOException;
 import java.util.List;
 
+import ad.ud3_a.apiclient.domain.Category;
 import ad.ud3_a.apiclient.domain.Product;
 import ad.ud3_a.apiclient.domain.ProductPage;
 
@@ -69,9 +70,9 @@ public class AppProduct {
 
 			case "GET_ALL_PRODUCT_CATEGORIES":
 				System.out.println("GET_ALL_PRODUCT_CATEGORIES:");
-				List<String> categories = productApiCaller.getAllProductsCategories();
-				for (String c : categories) {
-					System.out.println(c);
+				List<Category> categories = productApiCaller.getAllProductsCategories();
+				for (Category category : categories) {
+					System.out.println(category);
 				}
 				break;
 
