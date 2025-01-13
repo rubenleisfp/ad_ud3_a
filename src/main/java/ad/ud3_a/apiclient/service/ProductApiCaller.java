@@ -3,6 +3,7 @@ package ad.ud3_a.apiclient.service;
 import java.io.IOException;
 import java.util.List;
 
+import ad.ud3_a.apiclient.domain.Category;
 import ad.ud3_a.apiclient.domain.Product;
 import ad.ud3_a.apiclient.domain.ProductPage;
 
@@ -25,7 +26,7 @@ public interface ProductApiCaller {
 	 */
 	ProductPage searchProducts(String searchWord) throws IOException, InterruptedException, ApiCallException;
 
-	List<String> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException;
+	List<Category> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException;
 
 	ProductPage getProductsOfCategory(String category) throws IOException, InterruptedException, ApiCallException;
 

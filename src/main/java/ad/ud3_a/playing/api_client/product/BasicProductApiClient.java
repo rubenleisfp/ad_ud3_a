@@ -54,10 +54,10 @@ public class BasicProductApiClient {
 	}
 
 	
-	public void searchProducts(String category) {
+	public void searchProducts(String keyword) {
 
 		HttpClient client = HttpClient.newHttpClient();
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products/search?q=" + category)).GET().build();
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products/search?q=" + keyword)).GET().build();
 
 		try {
 			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -113,7 +113,7 @@ public class BasicProductApiClient {
 				.header("Content-Type", "application/json").POST(BodyPublishers.ofString(jsonProduct)).build();
 		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 		int statusCode = response.statusCode();
-		if (statusCode != 200) {
+		if (statusCode != 201) {
 			throw new  IOException("Error al agregar un producto. StatusCode: " + statusCode);
 		}
 	}

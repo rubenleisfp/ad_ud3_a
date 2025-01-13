@@ -1,18 +1,28 @@
 package ad.ud3_a.playing.api_client.product;
 
+import ad.ud3_a.apiclient.domain.Category;
+
 import java.io.IOException;
+import java.sql.SQLOutput;
+import java.util.List;
 import java.util.Scanner;
 
-public class App {
+public class AppBasicProductApi {
 
     private final BasicProductApiClient apiCaller = new BasicProductApiClient();
 
     public static void main(String[] args) {
-        App app = new App();
-        app.mostrarMenu();
+        AppBasicProductApi app = new AppBasicProductApi();
+        try {
+            app.mostrarMenu();
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Ha ocurrido un error tecnico y no podemos realizar la operativa. Intentelo más tarde");
+            //FIXME: En vez de relanzar, deberíamos loguear el error en un fichero de log de errores
+            throw  new RuntimeException(e);
+        }
     }
 
-    public void mostrarMenu() {
+    public void mostrarMenu() throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         int opcion;
 
@@ -34,53 +44,54 @@ public class App {
             scanner.nextLine(); // Consumir el salto de línea
 
             switch (opcion) {
-                case 1 -> obtenerTodosLosProductos();
+                case 1 ->    apiCaller.getAllProducts();
                 case 2 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int idProducto = scanner.nextInt();
                     scanner.nextLine();
-                    obtenerProductoPorId(idProducto);
+                    apiCaller.getProduct(idProducto);
 
                 }
                 case 3 -> {
                     System.out.println("Ingrese el la palabra clave de búsqueda: ");
-                    buscarProductoPorPalabra(scanner.nextLine());
+                    String palabraClave = scanner.nextLine();
+                    apiCaller.searchProducts(palabraClave);
                 }
                 case 4 -> {
                     System.out.print("Ingrese el límite de productos: ");
                     int limit = scanner.nextInt();
                     scanner.nextLine();
-                    System.out.print("Ingrese el número de página: ");
-                    int page = scanner.nextInt();
+                    System.out.print("Ingrese el número de elementos a omitir: ");
+                    int skip = scanner.nextInt();
                     scanner.nextLine();
                     System.out.print("Ingrese los campos a mostrar: ");
                     String selection = scanner.nextLine();
-                    obtenerProductosPaginados(limit, page, selection);
+                    apiCaller.getProducts(limit, skip, selection);
                 }
-                case 5 -> obtenerCategorias();
+                case 5 -> apiCaller.getAllProductsCategories();
                 case 6 -> {
                     System.out.print("Ingrese la categoria de los productos que desea mostrar: ");
                     String category = scanner.nextLine();
-                    obtenerProductosDeCategoria(category);
-
+                    apiCaller.getProductsOfCategory(category);
                 }
                 case 7 -> {
                     System.out.print("Ingrese el producto como Json: ");
                     String productJson = scanner.nextLine();
-                    agregarProducto(productJson);
+                    apiCaller.addProduct(productJson);;
                 }
                 case 8 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int id = scanner.nextInt();
                     scanner.nextLine(); // Consumir el salto de línea
-                    actualizarProducto(id, scanner.nextLine());
+                    System.out.println("Ingrese el producto como Json: ");
+                    String productJson = scanner.nextLine();
+                    apiCaller.updateProduct(id, productJson);
                 }
-                case 9 ->
-                {
+                case 9 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int id = scanner.nextInt();
                     scanner.nextLine(); // Consumir el salto de línea
-                    eliminarProducto(id);
+                    apiCaller.delete(id);
                 }
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida. Intente nuevamente.");
@@ -90,51 +101,4 @@ public class App {
         scanner.close();
     }
 
-    private void obtenerTodosLosProductos() {
-        apiCaller.getAllProducts();
-    }
-
-    private void obtenerProductoPorId(int id) {
-        apiCaller.getProduct(id);
-    }
-
-    private void buscarProductoPorPalabra(String keyword) {
-        apiCaller.searchProducts(keyword);
-    }
-
-    private void obtenerProductosPaginados(int limit, int page, String selection) {
-        apiCaller.getProducts(limit, page, selection);
-    }
-
-    private void obtenerCategorias() {
-        apiCaller.getAllProductsCategories();
-    }
-
-    private void obtenerProductosDeCategoria(String category) {
-        apiCaller.getProductsOfCategory(category);
-    }
-
-    private void agregarProducto(String productDetails) {
-        try {
-            apiCaller.addProduct(productDetails);
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error al agregar el producto: " + e.getMessage());
-        }
-    }
-
-    private void actualizarProducto(int id, String updatedDetails) {
-        try {
-            apiCaller.updateProduct(id, updatedDetails);
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error al actualizar el producto: " + e.getMessage());
-        }
-    }
-
-    private void eliminarProducto(int id) {
-        try {
-            apiCaller.delete(id);
-        } catch (IOException | InterruptedException e) {
-            System.out.println("Error al eliminar el producto: " + e.getMessage());
-        }
-    }
 }

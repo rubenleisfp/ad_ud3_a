@@ -1,106 +1,98 @@
 package ad.ud3_a.apiclient.service;
 
-import java.io.IOException;
-import java.util.List;
-
 import ad.ud3_a.apiclient.domain.Category;
 import ad.ud3_a.apiclient.domain.Product;
 import ad.ud3_a.apiclient.domain.ProductPage;
+import ad.ud3_a.apiclient.utils.MockUtils;
+import ad.ud3_a.playing.api_client.product.BasicProductApiClient;
 
-public class AppProduct {
+import java.io.IOException;
+import java.util.List;
+import java.util.Scanner;
 
-	private ProductApiCaller productApiCaller = new ProductApiCallerImpl("https://dummyjson.com/products");
+public class AppProductApi {
 
-	// FIXMNE: Harcoding. Esta informacion la debería introducir el usuario
-	private static final String OPERATION = "GET_DETAIL";
-	private static final String SEARCH_WORD = "laptop";
-	private static final String CATEGORY = "fragrances";
-	private static final int PRODUCT_ID = 10000;
+    private final ProductApiCaller apiCaller = new ProductApiCallerImpl("https://dummyjson.com/products");
 
-	public static void main(String[] args) {
-		AppProduct app = new AppProduct();
-		try {
-			app.run();
-		} catch (IOException | InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public static void main(String[] args) {
+        AppProductApi app = new AppProductApi();
+        try {
+            app.mostrarMenu();
+        } catch (ApiCallException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	private void run() throws IOException, InterruptedException {
+    public void mostrarMenu() throws ApiCallException, IOException, InterruptedException {
+        Scanner scanner = new Scanner(System.in);
+        int opcion;
 
-		Product product = new Product();
-		ProductPage productWrapper = new ProductPage();
+        do {
+            System.out.println("\n--- Menú de opciones ---");
+            System.out.println("1. Obtener todos los productos");
+            System.out.println("2. Obtener producto por ID");
+            System.out.println("3. Buscar producto por palabra clave");
+            System.out.println("4. Obtener todas las categorías de productos");
+            System.out.println("5. Agregar un producto");
+            System.out.println("6. Actualizar un producto");
+            System.out.println("7. Eliminar un producto por ID");
+            System.out.println("0. Salir");
+            System.out.print("Seleccione una opción: ");
 
-		try {
-			switch (OPERATION) {
-			case "CREATE":
-				System.out.println("CREATE:");
-				product.setBrand("brand");
-				productApiCaller.addProduct(product);
-				System.out.println("Producto creado");
-				break;
+            opcion = scanner.nextInt();
+            scanner.nextLine(); // Consumir el salto de línea
 
-			case "DELETE":
-				System.out.println("DELETE:" + PRODUCT_ID);
+            switch (opcion) {
+                case 1 -> {
+                    ProductPage productPage = apiCaller.getAllProducts();
+                    System.out.println(productPage);
+                }
+                case 2 -> {
+                    System.out.println("Ingrese el id del producto: ");
+                    int idProducto = scanner.nextInt();
+                    scanner.nextLine();
+                    Product product = apiCaller.getProduct(idProducto);
+                    System.out.println(product);
+                }
+                case 3 -> {
+                    System.out.println("Ingrese el la palabra clave de búsqueda: ");
+                    String keyword = scanner.nextLine();
+                    ProductPage productPage = apiCaller.searchProducts(keyword);
+                    System.out.println(productPage);
+                }
+                case 4 -> {
+                    List<Category> categoryList = apiCaller.getAllProductsCategories();
+                    for (Category category : categoryList) {
+                        System.out.println(category);
+                    }
+                }
+                case 5 -> {
+                    System.out.print("Ingresamos un producto mock: ");
+                    apiCaller.addProduct(MockUtils.getMockProduct());
+                }
+                case 6 -> {
+                    System.out.println("Ingrese el id del producto: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    apiCaller.updateProduct(id, MockUtils.getMockProduct());
 
-				productApiCaller.deleteProduct(PRODUCT_ID);
+                }
+                case 7 -> {
+                    System.out.println("Ingrese el id del producto: ");
+                    int id = scanner.nextInt();
+                    scanner.nextLine(); // Consumir el salto de línea
+                    apiCaller.deleteProduct(id);
+                }
+                case 0 -> System.out.println("Saliendo del programa...");
+                default -> System.out.println("Opción no válida. Intente nuevamente.");
+            }
+        } while (opcion != 0);
 
-				System.out.println("Producto eliminado");
-				break;
-
-			case "GET_ALL":
-				System.out.println("GET_ALL:");
-				productWrapper = productApiCaller.getAllProducts();
-				pintarProductos(productWrapper);
-				break;
-
-			case "GET_DETAIL":
-				System.out.println("GET_DETAIL:" + PRODUCT_ID);
-				product = productApiCaller.getProduct(PRODUCT_ID);
-				if (product != null) {
-					System.out.println("product: " + product);
-				}
-				break;
-
-			case "SEARCH_PRODUCT":
-				System.out.println("SEARCH_PRODUCT:" + SEARCH_WORD);
-				productWrapper = productApiCaller.searchProducts(SEARCH_WORD);
-				pintarProductos(productWrapper);
-				break;
-
-			case "GET_ALL_PRODUCT_CATEGORIES":
-				System.out.println("GET_ALL_PRODUCT_CATEGORIES:");
-				List<Category> categories = productApiCaller.getAllProductsCategories();
-				for (Category category : categories) {
-					System.out.println(category);
-				}
-				break;
-
-			case "GET_PRODUCTS_OF_CATEGORY":
-				System.out.println("GET_PRODUCTS_OF_CATEGORY:");
-				productWrapper = productApiCaller.getProductsOfCategory(CATEGORY);
-				pintarProductos(productWrapper);
-				break;
-
-			default:
-				throw new IllegalArgumentException("Operacion no soportada");
-
-			}
-		} catch (IOException | InterruptedException ex) {
-			System.out.println("Error al intentar establecer la comunicación con el  API");
-		} catch (ApiCallException e) {
-			System.out.println("Error durante la comunicación con el API");
-			System.out.println("Message:" + e.getMessage());
-			System.out.println("ResponseBody:" + e.getResponseBody());
-			System.out.println("StatusCode:" + e.getStatusCode());
-		}
-
-	}
-
-	private void pintarProductos(ProductPage productWrapper) {
-		if (productWrapper != null && productWrapper.getProducts() != null) {
-			System.out.println(productWrapper);
-		}
-	}
+        scanner.close();
+    }
 
 }

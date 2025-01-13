@@ -8,7 +8,10 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+import ad.ud3_a.apiclient.domain.Category;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import ad.ud3_a.apiclient.domain.Product;
 import ad.ud3_a.apiclient.domain.ProductPage;
@@ -21,16 +24,16 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	// https://dummyjson.com/
 	public ProductApiCallerImpl(String basePath) {
 		this.basePath = basePath;
-		this.gson = new Gson();
+		this.gson = new GsonBuilder().setPrettyPrinting().create();
 	}
 
 	/**
 	 * Obtiene todos los productos
-	 * 
+	 *
 	 * Ej. https://dummyjson.com/products
-	 * 
+	 *
 	 * GET
-	 * 
+	 *
 	 * @return
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -45,11 +48,11 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	/**
 	 * Obtiene un producto a partir de su id
-	 * 
+	 *
 	 * GET
-	 * 
+	 *
 	 * Ej. https://dummyjson.com/product/1
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 * @throws IOException
@@ -66,7 +69,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	/**
 	 * Hace la llamada de la request y devuelve un Product
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws IOException
@@ -81,7 +84,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	/**
 	 * Hace la llamada de la request y devuelve un ProductPage
-	 * 
+	 *
 	 * @param request
 	 * @return
 	 * @throws IOException
@@ -90,7 +93,9 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	 */
 	private ProductPage getProductsPage(HttpRequest request)
 			throws IOException, InterruptedException, ApiCallException {
-		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		HttpResponse<String> response = null;
+
+		response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 		handleResponse(response);
 		ProductPage productPage = gson.fromJson(response.body(), ProductPage.class);
 		return productPage;
@@ -98,11 +103,11 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	/**
 	 * Busca un producto con su categoria
-	 * 
+	 *
 	 * GET
-	 * 
+	 *
 	 * Ej: https://dummyjson.com/product/search?q=phone
-	 * 
+	 *
 	 * @param searchWord
 	 * @return
 	 * @throws IOException
@@ -120,11 +125,10 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	/**
 	 * Crea un nuevo producto
-	 * 
+	 *
 	 * POST
-	 * 
+	 *
 	 * @param product
-	 * @return 
 	 * @throws IOException
 	 * @throws InterruptedException
 	 * @throws ApiCallException
@@ -136,12 +140,11 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).header("Content-Type", "application/json")
 				.POST(BodyPublishers.ofString(jsonProduct)).build();
 		return getProduct(request);
-
 	}
 
 	/**
 	 * Actualiza un producto existe
-	 * 
+	 *
 	 * @param id             del producto a actualizar
 	 * @param updatedProduct informacion del producto actualizado
 	 * @throws IOException
@@ -165,7 +168,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 
 	private void handleResponse(HttpResponse<String> response) throws ApiCallException {
 		int statusCode = response.statusCode();
-		if (statusCode != 200) {
+		if (statusCode != 200 && statusCode != 201) {
 			handleError(response);
 		}
 	}
@@ -175,25 +178,36 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 		String responseBody = response.body();
 
 		switch (response.statusCode()) {
-		case 404:
-			throw new ApiCallException("El recurso no fue encontrado.", response.statusCode(), responseBody);
-		case 400:
-			throw new ApiCallException("Error en la solicitud del cliente.", response.statusCode(), responseBody);
-		case 500:
-			throw new ApiCallException("Error en el servidor.", response.statusCode(), responseBody);
-		default:
-			throw new ApiCallException("Error desconocido", response.statusCode(), responseBody);
+			case 404:
+				throw new ApiCallException("El recurso no fue encontrado.", response.statusCode(), responseBody);
+			case 400:
+				throw new ApiCallException("Error en la solicitud del cliente.", response.statusCode(), responseBody);
+			case 500:
+				throw new ApiCallException("Error en el servidor.", response.statusCode(), responseBody);
+			default:
+				throw new ApiCallException("Error desconocido", response.statusCode(), responseBody);
 		}
 	}
 
 	@Override
-	public List<String> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException {
-		throw new UnsupportedOperationException();
+	public List<Category> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException {
+		String url = basePath + "/categories";
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
+				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
+		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		handleResponse(response);
+
+		List<Category> categories = gson.fromJson(response.body(), new TypeToken<List<Category>>() {
+		}.getType());
+		return categories;
 	}
 
 	@Override
 	public ProductPage getProductsOfCategory(String category) throws IOException, InterruptedException, ApiCallException {
-		throw new UnsupportedOperationException();
+		String url = basePath + "/category/" + category;
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
+				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
+		return getProductsPage(request);
 	}
 
 }
