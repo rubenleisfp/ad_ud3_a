@@ -40,7 +40,6 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	 */
 	@Override
 	public ProductPage getAllProducts() throws ApiCallException, IOException, InterruptedException {
-
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(basePath))
 				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
 		return getProductsPage(request);

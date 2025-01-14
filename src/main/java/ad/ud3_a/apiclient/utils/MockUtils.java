@@ -11,6 +11,12 @@ import java.util.List;
 public class MockUtils {
 
     public static Product getMockProduct() {
+        Product product = getMockProductWithoutId();
+        product.setId(1);
+        return product;
+    }
+
+    public static Product getMockProductWithoutId() {
         Dimensions dimensions = new Dimensions();
         dimensions.setWidth(23.17);
         dimensions.setHeight(14.43);
@@ -49,7 +55,6 @@ public class MockUtils {
 
         // Crear el objeto Product
         Product product = new Product();
-        product.setId(1);
         product.setTitle("Essence Mascara Lash Princess");
         product.setDescription("The Essence Mascara Lash Princess is a popular mascara known for its volumizing and lengthening effects. Achieve dramatic lashes with this long-lasting and cruelty-free formula.");
         product.setCategory("beauty");

@@ -50,7 +50,7 @@ public class ProductApiCallerImplTest {
 		int productId = 1;
 		Product actualProduct = productApiCaller.getProduct(productId);
 		assertNotNull(actualProduct);
-		assertEquals(productId, actualProduct.getId());
+		assertEquals(productId, actualProduct.getId().intValue());
 		// Validar que el producto obtenido sea igual al producto esperado
 		assertEquals(MockUtils.getMockProduct(), actualProduct);
 	}

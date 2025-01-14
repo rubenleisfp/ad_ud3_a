@@ -19,11 +19,14 @@ public class AppProductApi {
         try {
             app.mostrarMenu();
         } catch (ApiCallException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            //FIXME: Esta informacion no deberia mostrarse al usuario, debería volcarse a un fichero de log
+            System.out.println("Ha ocurrido un error técnico. Reinténtelo más tarde");
+            System.out.println(e.getMessage());
+            System.out.println("StatusCode: " + e.getStatusCode());
+            System.out.println("ResponseBody: " +e.getResponseBody());
+        } catch (IOException | InterruptedException e) {
+            System.out.println("Ha ocurrido un error técnico. Reinténtelo más tarde");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -78,14 +81,16 @@ public class AppProductApi {
                     System.out.println("Ingrese el id del producto: ");
                     int id = scanner.nextInt();
                     scanner.nextLine(); // Consumir el salto de línea
-                    apiCaller.updateProduct(id, MockUtils.getMockProduct());
+                    Product product = apiCaller.updateProduct(id, MockUtils.getMockProductWithoutId());
+                    System.out.println(product);
 
                 }
                 case 7 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int id = scanner.nextInt();
                     scanner.nextLine(); // Consumir el salto de línea
-                    apiCaller.deleteProduct(id);
+                    Product product = apiCaller.deleteProduct(id);
+                    System.out.println(product);
                 }
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida. Intente nuevamente.");

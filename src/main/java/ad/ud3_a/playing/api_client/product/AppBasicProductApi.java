@@ -43,19 +43,24 @@ public class AppBasicProductApi {
             opcion = scanner.nextInt();
             scanner.nextLine(); // Consumir el salto de línea
 
+            String response = "";
             switch (opcion) {
-                case 1 ->    apiCaller.getAllProducts();
+                case 1 ->    {
+                    response = apiCaller.getAllProducts();
+                    System.out.println(response);
+                }
                 case 2 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int idProducto = scanner.nextInt();
                     scanner.nextLine();
-                    apiCaller.getProduct(idProducto);
-
+                    response = apiCaller.getProduct(idProducto);
+                    System.out.println(response);
                 }
                 case 3 -> {
                     System.out.println("Ingrese el la palabra clave de búsqueda: ");
                     String palabraClave = scanner.nextLine();
-                    apiCaller.searchProducts(palabraClave);
+                    response = apiCaller.searchProducts(palabraClave);
+                    System.out.println(response);
                 }
                 case 4 -> {
                     System.out.print("Ingrese el límite de productos: ");
@@ -66,18 +71,25 @@ public class AppBasicProductApi {
                     scanner.nextLine();
                     System.out.print("Ingrese los campos a mostrar: ");
                     String selection = scanner.nextLine();
-                    apiCaller.getProducts(limit, skip, selection);
+                    response =  apiCaller.getProducts(limit, skip, selection);
+                    System.out.println(response);
                 }
-                case 5 -> apiCaller.getAllProductsCategories();
+                case 5 ->
+                {
+                    response = apiCaller.getAllProductsCategories();
+                    System.out.println(response);
+                }
                 case 6 -> {
                     System.out.print("Ingrese la categoria de los productos que desea mostrar: ");
                     String category = scanner.nextLine();
-                    apiCaller.getProductsOfCategory(category);
+                    response = apiCaller.getProductsOfCategory(category);
+                    System.out.println(response);
                 }
                 case 7 -> {
                     System.out.print("Ingrese el producto como Json: ");
                     String productJson = scanner.nextLine();
-                    apiCaller.addProduct(productJson);;
+                    response = apiCaller.addProduct(productJson);
+                    System.out.println(response);
                 }
                 case 8 -> {
                     System.out.println("Ingrese el id del producto: ");
@@ -85,13 +97,15 @@ public class AppBasicProductApi {
                     scanner.nextLine(); // Consumir el salto de línea
                     System.out.println("Ingrese el producto como Json: ");
                     String productJson = scanner.nextLine();
-                    apiCaller.updateProduct(id, productJson);
+                    response =  apiCaller.updateProduct(id, productJson);
+                    System.out.println(response);
                 }
                 case 9 -> {
                     System.out.println("Ingrese el id del producto: ");
                     int id = scanner.nextInt();
                     scanner.nextLine(); // Consumir el salto de línea
-                    apiCaller.delete(id);
+                    response = apiCaller.delete(id);
+                    System.out.println(response);
                 }
                 case 0 -> System.out.println("Saliendo del programa...");
                 default -> System.out.println("Opción no válida. Intente nuevamente.");

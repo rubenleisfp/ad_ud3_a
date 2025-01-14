@@ -13,14 +13,14 @@ import ad.ud3_a.apiclient.domain.ProductPage;
 
 public class BasicProductApiClient {
 
-	public void getAllProducts() {
+	public String getAllProducts() {
 
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products")).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
@@ -33,82 +33,79 @@ public class BasicProductApiClient {
 
 		try {
 			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			ProductPage productWrapper = gson.fromJson(respuesta.body(), ProductPage.class);
-			return productWrapper;
+			ProductPage productPage = gson.fromJson(respuesta.body(), ProductPage.class);
+			return productPage;
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void getProduct(int id) {
-
+	public String getProduct(int id) {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products/" + id)).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	
-	public void searchProducts(String keyword) {
-
+	public String searchProducts(String keyword) {
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products/search?q=" + keyword)).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void getProducts(int limit, int skip, String selection) {
+	public String getProducts(int limit, int skip, String selection) {
 		//https://dummyjson.com/products?limit=10&skip=10&select=title,price
 		String url = String.format("https://dummyjson.com/products?limit=%s&skip=%s&select=%s",limit, skip, selection);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void getAllProductsCategories() {
+	public String getAllProductsCategories() {
 		String url = String.format("https://dummyjson.com/products/categories");
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void getProductsOfCategory(String category) {
+	public String getProductsOfCategory(String category) {
 		String url = String.format("https://dummyjson.com/products/category/%s", category);
 		HttpClient client = HttpClient.newHttpClient();
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
 
 		try {
-			HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
-			System.out.println(respuesta.body());
+			HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			return response.body();
 		} catch (IOException | InterruptedException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	public void addProduct(String jsonProduct) throws IOException, InterruptedException {
-	
+	public String addProduct(String jsonProduct) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://dummyjson.com/products/add"))
 				.header("Content-Type", "application/json").POST(BodyPublishers.ofString(jsonProduct)).build();
 		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
@@ -116,9 +113,10 @@ public class BasicProductApiClient {
 		if (statusCode != 201) {
 			throw new  IOException("Error al agregar un producto. StatusCode: " + statusCode);
 		}
+		return response.body();
 	}
 	
-	public void updateProduct(int productId, String jsonProduct) throws IOException, InterruptedException {
+	public String updateProduct(int productId, String jsonProduct) throws IOException, InterruptedException {
 		String url = String.format("https://dummyjson.com/products/%s", productId);
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
 				.header("Content-Type", "application/json").PUT(BodyPublishers.ofString(jsonProduct)).build();
@@ -127,11 +125,11 @@ public class BasicProductApiClient {
 		if (statusCode != 200) {
 			throw new  IOException("Error al actualizar un producto. StatusCode: " + statusCode);
 		}
-		System.out.println(response.body());
+		return response.body();
 	}
 	
 	
-	public void delete(int productId) throws IOException, InterruptedException {
+	public String delete(int productId) throws IOException, InterruptedException {
 		String url = String.format("https://dummyjson.com/products/%s", productId);
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
 				.header("Content-Type", "application/json").DELETE().build();
@@ -140,9 +138,6 @@ public class BasicProductApiClient {
 		if (statusCode != 200) {
 			throw new  IOException("Error al eliminar un producto. StatusCode: " + statusCode);
 		}
-		System.out.println(response.body());
+		return response.body();
 	}
-
-	
-	
 }
