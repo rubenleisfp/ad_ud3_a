@@ -9,7 +9,7 @@ import java.net.http.HttpResponse;
 
 import com.google.gson.Gson;
 
-import ad.ud3_a.apiclient.domain.ProductPage;
+import ad.ud3_a.apiclient.product.domain.ProductPage;
 
 public class BasicProductApiClient {
 

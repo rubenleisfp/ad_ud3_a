@@ -1,11 +1,11 @@
-package ad.ud3_a.apiclient.service;
+package ad.ud3_a.apiclient.product.service;
 
 import java.io.IOException;
 import java.util.List;
 
-import ad.ud3_a.apiclient.domain.Category;
-import ad.ud3_a.apiclient.domain.Product;
-import ad.ud3_a.apiclient.domain.ProductPage;
+import ad.ud3_a.apiclient.product.domain.Category;
+import ad.ud3_a.apiclient.product.domain.Product;
+import ad.ud3_a.apiclient.product.domain.ProductPage;
 
 public interface ProductApiCaller {
 

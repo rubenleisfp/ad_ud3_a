@@ -1,4 +1,4 @@
-package ad.ud3_a.apiclient.service;
+package ad.ud3_a.apiclient.product.service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -8,13 +8,13 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.util.List;
 
-import ad.ud3_a.apiclient.domain.Category;
+import ad.ud3_a.apiclient.product.domain.Category;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import ad.ud3_a.apiclient.domain.Product;
-import ad.ud3_a.apiclient.domain.ProductPage;
+import ad.ud3_a.apiclient.product.domain.Product;
+import ad.ud3_a.apiclient.product.domain.ProductPage;
 
 public class ProductApiCallerImpl implements ProductApiCaller {
 

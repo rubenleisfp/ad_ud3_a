@@ -1,9 +1,9 @@
-package ad.ud3_a.apiclient.utils;
+package ad.ud3_a.apiclient.product.utils;
 
-import ad.ud3_a.apiclient.domain.Dimensions;
-import ad.ud3_a.apiclient.domain.Meta;
-import ad.ud3_a.apiclient.domain.Product;
-import ad.ud3_a.apiclient.domain.Review;
+import ad.ud3_a.apiclient.product.domain.Dimensions;
+import ad.ud3_a.apiclient.product.domain.Meta;
+import ad.ud3_a.apiclient.product.domain.Product;
+import ad.ud3_a.apiclient.product.domain.Review;
 
 import java.util.Arrays;
 import java.util.List;
