@@ -187,15 +187,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	 */
 	@Override
 	public List<Category> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException {
-		String url = basePath + "/categories";
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
-				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
-		HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
-		handleResponse(response);
-
-		List<Category> categories = gson.fromJson(response.body(), new TypeToken<List<Category>>() {
-		}.getType());
-		return categories;
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	/**
@@ -211,10 +203,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	 */
 	@Override
 	public ProductPage getProductsOfCategory(String category) throws IOException, InterruptedException, ApiCallException {
-		String url = basePath + "/category/" + category;
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
-				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
-		return getProductsPage(request);
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	/**
@@ -233,12 +222,7 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	@Override
 	public ProductPage getProducts(int limit, int skip, String selection) throws ApiCallException, IOException, InterruptedException {
 		//Ej: https://dummyjson.com/products?limit=10&skip=10&select=title,price
-		StringBuilder sb = new StringBuilder();
-		String query = String.format("?limit=%s&skip=%s&select=%s",limit, skip, selection);
-		sb.append(basePath);
-		sb.append(query);
-		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(sb.toString())).GET().build();
-		return getProductsPage(request);
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	private void handleResponse(HttpResponse<String> response) throws ApiCallException {

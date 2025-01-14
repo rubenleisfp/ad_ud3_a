@@ -39,61 +39,28 @@ public class ProductApiCallerImplTest {
 		assertEquals("Kiwi", lastProduct.getTitle());
 	}
 
-
-
-
 	@Test
 	public void testGetProduct() throws IOException, InterruptedException, ApiCallException {
-
-
-		// Hacemos la llamada al api con el valor 1
-		int productId = 1;
-		Product actualProduct = productApiCaller.getProduct(productId);
-		assertNotNull(actualProduct);
-		assertEquals(productId, actualProduct.getId().intValue());
-		// Validar que el producto obtenido sea igual al producto esperado
-		assertEquals(MockUtils.getMockProduct(), actualProduct);
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	@Test
 	public void testSearchProducts() throws IOException, InterruptedException, ApiCallException {
-		String searchWord = "phone";
-		ProductPage productPage = productApiCaller.searchProducts(searchWord);
-		assertNotNull(productPage);
-		assertNotNull(productPage.getProducts());
-		assertFalse(productPage.getProducts().isEmpty());
-
-		for (Product p : productPage.getProducts()) {
-			System.out.println(p);
-			assertTrue("Product title or description should contain the search word", p.getTitle().toLowerCase().contains(searchWord)
-					|| p.getDescription().toLowerCase().contains(searchWord));
-		}
-
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	@Test
 	public void testGetAllProductsCategories() throws IOException, InterruptedException, ApiCallException {
-		List<Category> categories = productApiCaller.getAllProductsCategories();
-		assertNotNull(categories);
-		assertEquals(24, categories.size());
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	@Test
 	public void testGetProductsOfCategory() throws IOException, InterruptedException, ApiCallException {
-		String category = "smartphones"; // Define tu categoría
-		ProductPage productPage = productApiCaller.getProductsOfCategory(category);
-		assertNotNull(productPage);
-		assertNotNull(productPage.getProducts());
-		assertEquals(16, productPage.getTotal());
-		for (Product p : productPage.getProducts()) {
-			assertEquals("Category smartphones","smartphones", p.getCategory());
-		
-		}
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 
 	@Test
 	public void testAddProduct() throws IOException, InterruptedException, ApiCallException {
-		Product productAdded = productApiCaller.addProduct(MockUtils.getMockProduct());
-		assertEquals("Essence Mascara Lash Princess", productAdded.getTitle());
+		throw new UnsupportedOperationException("A implementar por el alumno");
 	}
 }
