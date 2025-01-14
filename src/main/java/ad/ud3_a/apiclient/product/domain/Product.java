@@ -1,4 +1,4 @@
-package ad.ud3_a.apiclient.domain;
+package ad.ud3_a.apiclient.product.domain;
 
 import java.util.List;
 import java.util.Objects;

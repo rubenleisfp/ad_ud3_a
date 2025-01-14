@@ -1,4 +1,4 @@
-package ad.ud3_a.apiclient.service;
+package ad.ud3_a.apiclient.product.service;
 
 public class ApiCallException extends Exception {
 

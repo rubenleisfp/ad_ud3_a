@@ -1,10 +1,6 @@
 package ad.ud3_a.playing.api_client.product;
 
-import ad.ud3_a.apiclient.domain.Category;
-
 import java.io.IOException;
-import java.sql.SQLOutput;
-import java.util.List;
 import java.util.Scanner;
 
 public class AppBasicProductApi {

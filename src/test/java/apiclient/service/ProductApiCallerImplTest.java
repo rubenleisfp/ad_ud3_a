@@ -6,16 +6,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
-import ad.ud3_a.apiclient.domain.*;
-import ad.ud3_a.apiclient.service.ProductApiCallerImpl;
-import ad.ud3_a.apiclient.utils.MockUtils;
+import ad.ud3_a.apiclient.product.domain.Product;
+import ad.ud3_a.apiclient.product.domain.ProductPage;
+import ad.ud3_a.apiclient.product.service.ProductApiCallerImpl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ad.ud3_a.apiclient.service.ApiCallException;
+import ad.ud3_a.apiclient.product.service.ApiCallException;
 
 public class ProductApiCallerImplTest {
 
