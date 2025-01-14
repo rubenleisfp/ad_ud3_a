@@ -14,7 +14,5 @@ public class App {
 
 		v1.draw();
 		v2.draw();
-
 	}
-
 }

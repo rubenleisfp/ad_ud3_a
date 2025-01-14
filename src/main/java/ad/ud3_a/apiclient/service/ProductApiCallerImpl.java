@@ -144,6 +144,8 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 	/**
 	 * Actualiza un producto existe
 	 *
+	 * POST
+	 *
 	 * @param id             del producto a actualizar
 	 * @param updatedProduct informacion del producto actualizado
 	 * @throws IOException
@@ -159,35 +161,30 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 		return getProduct(request);
 	}
 
+	/**
+	 * Borra un producto asociado al id indicado como argumento
+	 * @param id
+	 * @return
+	 * @throws ApiCallException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	@Override
 	public Product deleteProduct(int id) throws ApiCallException, IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(basePath + "/" + id)).DELETE().build();
 		return getProduct(request);
 	}
 
-	private void handleResponse(HttpResponse<String> response) throws ApiCallException {
-		int statusCode = response.statusCode();
-		if (statusCode != 200 && statusCode != 201) {
-			handleError(response);
-		}
-	}
-
-	private void handleError(HttpResponse<String> response) throws ApiCallException {
-
-		String responseBody = response.body();
-
-		switch (response.statusCode()) {
-			case 404:
-				throw new ApiCallException("El recurso no fue encontrado.", response.statusCode(), responseBody);
-			case 400:
-				throw new ApiCallException("Error en la solicitud del cliente.", response.statusCode(), responseBody);
-			case 500:
-				throw new ApiCallException("Error en el servidor.", response.statusCode(), responseBody);
-			default:
-				throw new ApiCallException("Error desconocido", response.statusCode(), responseBody);
-		}
-	}
-
+	/**
+	 * Obtiene las distintas categorias
+	 *
+	 * GET Ej. https://dummyjson.com/categories
+	 *
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ApiCallException
+	 */
 	@Override
 	public List<Category> getAllProductsCategories() throws IOException, InterruptedException, ApiCallException {
 		String url = basePath + "/categories";
@@ -201,12 +198,68 @@ public class ProductApiCallerImpl implements ProductApiCaller {
 		return categories;
 	}
 
+	/**
+	 * 	 Obtiene los productos de una categoria
+	 *
+	 * 	 GET Ej. https://dummyjson.com/category/vehicle
+	 *
+	 * @param category
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ApiCallException
+	 */
 	@Override
 	public ProductPage getProductsOfCategory(String category) throws IOException, InterruptedException, ApiCallException {
 		String url = basePath + "/category/" + category;
 		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
 				.method("GET", HttpRequest.BodyPublishers.noBody()).build();
 		return getProductsPage(request);
+	}
+
+	/**
+	 *  Obtiene los productos paginados
+	 *  Solamente aquellos campos que pertenezcan a la seleccion
+	 * 	GET Ej. https://dummyjson.com/products?limit=10&skip=10&select=title,price
+	 *
+	 * @param limit
+	 * @param skip
+	 * @param selection
+	 * @return
+	 * @throws ApiCallException
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	@Override
+	public ProductPage getProducts(int limit, int skip, String selection) throws ApiCallException, IOException, InterruptedException {
+		//Ej: https://dummyjson.com/products?limit=10&skip=10&select=title,price
+		StringBuilder sb = new StringBuilder();
+		String query = String.format("?limit=%s&skip=%s&select=%s",limit, skip, selection);
+		sb.append(basePath);
+		sb.append(query);
+		HttpRequest request = HttpRequest.newBuilder().uri(URI.create(sb.toString())).GET().build();
+		return getProductsPage(request);
+	}
+
+	private void handleResponse(HttpResponse<String> response) throws ApiCallException {
+		int statusCode = response.statusCode();
+		if (statusCode != 200 && statusCode != 201) {
+			handleError(response);
+		}
+	}
+
+	private void handleError(HttpResponse<String> response) throws ApiCallException {
+		String responseBody = response.body();
+		switch (response.statusCode()) {
+			case 404:
+				throw new ApiCallException("El recurso no fue encontrado.", response.statusCode(), responseBody);
+			case 400:
+				throw new ApiCallException("Error en la solicitud del cliente.", response.statusCode(), responseBody);
+			case 500:
+				throw new ApiCallException("Error en el servidor.", response.statusCode(), responseBody);
+			default:
+				throw new ApiCallException("Error desconocido", response.statusCode(), responseBody);
+		}
 	}
 
 }

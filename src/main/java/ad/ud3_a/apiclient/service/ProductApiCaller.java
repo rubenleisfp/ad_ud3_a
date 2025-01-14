@@ -36,4 +36,5 @@ public interface ProductApiCaller {
 
 	Product deleteProduct(int id) throws IOException, InterruptedException, ApiCallException;
 
+	ProductPage getProducts(int limit, int skip, String selection) throws ApiCallException, IOException, InterruptedException;
 }
